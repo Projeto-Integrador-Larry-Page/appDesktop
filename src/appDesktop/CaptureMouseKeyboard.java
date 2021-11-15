@@ -82,8 +82,20 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 							MouseKeyEvent = CurrentEvent;
 							isActive = false;
 						}
-					}				
-			}
+					}
+					
+				    //Log quando a JVM desligar
+					Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			            @Override
+			            public void run() {
+			                try {
+			                    logger.info("Desligando");
+			 
+			                }catch (Exception e) {								
+							}
+			            }
+			        }));
+					};
 		};
 		
 		timer.scheduleAtFixedRate(task, 0, 1000); // 1000ms = 1sec
@@ -107,17 +119,7 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 	       
 	    }
 	    
-	    try {
-	    	//Log quando a JVM desligar
-	         Runtime.getRuntime().addShutdownHook(new Thread() {
-	        	 public void run() {
-	                 System.out.println("Bye.");
-	                 logger.info("virtual-machine shutdown");
-	              }
-	         });
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
+	    
 	}
 	
 	public void nativeMouseClicked(NativeMouseEvent e) {
