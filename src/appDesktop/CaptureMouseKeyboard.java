@@ -1,10 +1,14 @@
 package appDesktop;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
@@ -16,7 +20,8 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMouseWheelListener, NativeKeyListener {
 
 	Timer timer = new Timer();
-
+	static Logger logger = Logger.getLogger("MyEvents");  
+	
 	private boolean isActive = false;
 	
 	private int count = 0;
@@ -39,6 +44,9 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 
 					if (isActive == false && (CurrentEvent != 9998 && MouseKeyEvent != 9998)) { 
 						
+						logger.info("ATIVO; ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
+						
+						
 						System.out.println("--- ATIVO ---");
 						System.out.println("ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
 						System.out.println("");
@@ -57,11 +65,14 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 					if (count <= tempo && CurrentEvent != 9998) {						
 						count++;
 						
-						System.out.println(count + " Segundos de Inatividade...\n");
+//						System.out.println(count + " Segundos de Inatividade...\n");
 						
 						CurrentEvent = 9999;							
 					} else {
 						if (CurrentEvent != 9998) {
+							
+							logger.info("INATIVO; ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
+							
 							
 							System.out.println("--- INATIVO ---");
 							System.out.println("ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
@@ -76,6 +87,37 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 		};
 		
 		timer.scheduleAtFixedRate(task, 0, 1000); // 1000ms = 1sec
+	}
+
+	public void recordEventsLogs() {
+		FileHandler fh;  
+
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler("C:/temp/MyEvents.log");  
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace(); 
+	       
+	    }
+	    
+	    try {
+	    	//Log quando a JVM desligar
+	         Runtime.getRuntime().addShutdownHook(new Thread() {
+	        	 public void run() {
+	                 System.out.println("Bye.");
+	                 logger.info("virtual-machine shutdown");
+	              }
+	         });
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
 	}
 	
 	public void nativeMouseClicked(NativeMouseEvent e) {

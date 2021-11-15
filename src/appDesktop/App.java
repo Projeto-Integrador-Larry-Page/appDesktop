@@ -1,19 +1,21 @@
 package appDesktop;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
 public class App {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		
 		/*TimerTask timerTask = new MyTimerTask();
@@ -43,10 +45,11 @@ public class App {
 		// Get the logger for "org.jnativehook" and set the level to off.
 		Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
 		logger.setLevel(Level.OFF);
+
 		
 		try {
 			GlobalScreen.registerNativeHook();
-						
+			
 		} catch (NativeHookException ex) {
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
@@ -63,7 +66,10 @@ public class App {
 		GlobalScreen.addNativeMouseWheelListener(captureActivity);
 		GlobalScreen.addNativeKeyListener(captureActivity);
 		
+		captureActivity.recordEventsLogs();
+		
 		captureActivity.checkInactivity(10);
+		
 		
 		/*
 		 * String copyright = "\n" +
