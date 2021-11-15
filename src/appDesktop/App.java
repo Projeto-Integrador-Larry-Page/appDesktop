@@ -55,14 +55,15 @@ public class App {
 		}
 
 		// Construct the example object.
-		CaptureMouse captureMouse = new CaptureMouse();
+		CaptureMouseKeyboard captureActivity = new CaptureMouseKeyboard();
 				
 		// Add the appropriate listeners for the example object.
-		GlobalScreen.addNativeMouseListener(captureMouse);
-		GlobalScreen.addNativeMouseMotionListener(captureMouse);
-		GlobalScreen.addNativeMouseWheelListener(captureMouse);
+		GlobalScreen.addNativeMouseListener(captureActivity);
+		GlobalScreen.addNativeMouseMotionListener(captureActivity);
+		GlobalScreen.addNativeMouseWheelListener(captureActivity);
+		GlobalScreen.addNativeKeyListener(captureActivity);
 		
-		captureMouse.verificarAtividadeMouse(3);
+		captureActivity.checkInactivity(10);
 		
 		/*
 		 * String copyright = "\n" +
