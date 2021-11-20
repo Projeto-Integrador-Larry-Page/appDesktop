@@ -41,10 +41,12 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 			
 
 			public void run() {
-
-					if (isActive == false && (CurrentEvent != 9998 && MouseKeyEvent != 9998)) { 
+				
+					//System.out.println("CurrentEvent = " + CurrentEvent + "\nMouseKeyEvent = " + MouseKeyEvent + "\n" + "isActive = " + isActive + "\n");
+					
+					if (isActive == false && (CurrentEvent != 1 && MouseKeyEvent != 1)) { 
 						
-						logger.info("ATIVO; ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
+						FileUtil.escreverTexto("ATIVO;" + CurrentEvent + ";" + getDateTimeEvent() + ";" + System.getProperty("user.name"));
 						
 						
 						System.out.println("--- ATIVO ---");
@@ -54,7 +56,7 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 						isActive = true;			
 					}
 					
-					if(CurrentEvent != 9999 || (MouseX != AtualX && MouseY != AtualY)) { 
+					if(CurrentEvent != 1 || (MouseX != AtualX && MouseY != AtualY)) { 
 						count = 0;
 						CurrentEvent = MouseKeyEvent;
 						
@@ -62,64 +64,30 @@ public class CaptureMouseKeyboard implements NativeMouseInputListener, NativeMou
 					    AtualY = MouseY;
 					}							
 					
-					if (count <= tempo && CurrentEvent != 9998) {						
+					if (count <= tempo && isActive) {						
 						count++;
 						
 //						System.out.println(count + " Segundos de Inatividade...\n");
 						
-						CurrentEvent = 9999;							
+						CurrentEvent = 1;							
 					} else {
-						if (CurrentEvent != 9998) {
-							
-							logger.info("INATIVO; ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
-							
+						if (isActive) {
+
+							FileUtil.escreverTexto("INATIVO;" + CurrentEvent + ";" + getDateTimeEvent() + ";" + System.getProperty("user.name"));
 							
 							System.out.println("--- INATIVO ---");
 							System.out.println("ID:" + CurrentEvent + "; Data: " + getDateTimeEvent() + "; Usuario: " + System.getProperty("user.name"));
 							System.out.println("");
-
-							CurrentEvent = 9998;
+							
 							MouseKeyEvent = CurrentEvent;
 							isActive = false;
 						}
 					}
 					
-				    //Log quando a JVM desligar
-					Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			            @Override
-			            public void run() {
-			                try {
-			                    logger.info("Desligando");
-			 
-			                }catch (Exception e) {								
-							}
-			            }
-			        }));
-					};
+			};
 		};
 		
 		timer.scheduleAtFixedRate(task, 0, 1000); // 1000ms = 1sec
-	}
-
-	public void recordEventsLogs() {
-		FileHandler fh;  
-
-	    try {  
-
-	        // This block configure the logger with handler and formatter  
-	        fh = new FileHandler("C:/temp/MyEvents.log");  
-	        logger.addHandler(fh);
-	        SimpleFormatter formatter = new SimpleFormatter();  
-	        fh.setFormatter(formatter);  
-
-	    } catch (SecurityException e) {  
-	        e.printStackTrace();  
-	    } catch (IOException e) {  
-	        e.printStackTrace(); 
-	       
-	    }
-	    
-	    
 	}
 	
 	public void nativeMouseClicked(NativeMouseEvent e) {

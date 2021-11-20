@@ -14,7 +14,7 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
 public class App {
-
+	
 	public static void main(String[] args) throws IOException {
 
 		
@@ -65,10 +65,22 @@ public class App {
 		GlobalScreen.addNativeMouseMotionListener(captureActivity);
 		GlobalScreen.addNativeMouseWheelListener(captureActivity);
 		GlobalScreen.addNativeKeyListener(captureActivity);
+				
+		//captureActivity.recordEventsLogs();
+		 /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			 public void run() {		        
+		        try {
+					Thread.sleep(1000);
+					FileUtil.escreverTexto("Programa finalizado");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		      }
+		 }));
+		//FileUtil.escreverTexto("teste de texto para o log");
 		
-		captureActivity.recordEventsLogs();
-		
-		captureActivity.checkInactivity(10);
+		captureActivity.checkInactivity(3);
 		
 		
 		/*
@@ -93,5 +105,5 @@ public class App {
 		 */
 
 	}
-
+	
 }
