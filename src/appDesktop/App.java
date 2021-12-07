@@ -38,7 +38,7 @@ public class App {
 		GlobalScreen.addNativeMouseWheelListener(captureActivity);
 		GlobalScreen.addNativeKeyListener(captureActivity);
 		
-		captureActivity.checkInactivity(60);
+		captureActivity.checkInactivity(10);
 				
 		//captureActivity.recordEventsLogs();
 		 /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
